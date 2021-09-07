@@ -23,4 +23,9 @@ public class ParkingLot {
         return vehicles.add(vehicle);
     }
 
+    public boolean unPark(Vehicle vehicle) throws VehicleCouldNotBeUnParkedException, UnParkingFromEmptyLotException {
+        if (!vehicles.contains(vehicle) && vehicles.size()>0) throw new VehicleCouldNotBeUnParkedException("No Vehicle found to un-park.");
+        if (vehicles.size()==0) throw new UnParkingFromEmptyLotException("Vehicle cannot be up-parked from empty lot.");
+        return vehicles.remove(vehicle);
+    }
 }

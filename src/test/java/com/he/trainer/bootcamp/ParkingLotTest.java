@@ -35,4 +35,38 @@ public class ParkingLotTest {
         assertThrows(ParkingBeyondCapacityException.class, () -> parkingLot.park(vehicle()));
     }
 
+    @Test
+    public void one_vehicle_can_be_unparked() throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException, VehicleCouldNotBeUnParkedException, UnParkingFromEmptyLotException {
+        ParkingLot parkingLot = new ParkingLot(1);
+        Vehicle vehicle = vehicle();
+        parkingLot.park(vehicle);
+
+        assertTrue(parkingLot.unPark(vehicle));
+    }
+
+    @Test
+    public void same_vehicle_should_not_be_unparked_twice_unless_it_was_parked() throws VehicleCouldNotBeUnParkedException, VehicleCouldNotBeParkedException, ParkingBeyondCapacityException, UnParkingFromEmptyLotException {
+        ParkingLot parkingLot = new ParkingLot(3);
+        Vehicle v1 = vehicle();
+        Vehicle v2 = vehicle();
+        Vehicle v3 = vehicle();
+
+        parkingLot.park(v1);
+        parkingLot.park(v2);
+        parkingLot.park(v3);
+
+        parkingLot.unPark(v1);
+
+        assertThrows(VehicleCouldNotBeUnParkedException.class, () -> parkingLot.unPark(v1));
+    }
+
+    @Test
+    public void vehicleUnParkingFromEmptyLotThrowsException() throws VehicleCouldNotBeUnParkedException, VehicleCouldNotBeParkedException, ParkingBeyondCapacityException, UnParkingFromEmptyLotException {
+        ParkingLot parkingLot = new ParkingLot(1);
+        Vehicle vehicle = vehicle();
+        parkingLot.park(vehicle);
+        parkingLot.unPark(vehicle);
+
+        assertThrows(UnParkingFromEmptyLotException.class, () -> parkingLot.unPark(vehicle));
+    }
 }
