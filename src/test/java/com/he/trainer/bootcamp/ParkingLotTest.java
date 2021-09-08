@@ -3,6 +3,7 @@ package com.he.trainer.bootcamp;
 import com.he.trainer.bootcamp.exception.ParkingBeyondCapacityException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeParkedException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeUnParkedException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static com.he.trainer.bootcamp.Vehicle.vehicle;
@@ -68,5 +69,28 @@ public class ParkingLotTest {
         parkingLot.unPark(vehicle);
 
         assertThrows(UnParkingFromEmptyLotException.class, () -> parkingLot.unPark(vehicle));
+    }
+
+    @Test
+    public void knowMyVehicleIsParked() throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException {
+        ParkingLot parkingLot = new ParkingLot(1);
+        Vehicle vehicle = vehicle();
+        parkingLot.park(vehicle);
+
+        boolean parked = parkingLot.isParked(vehicle);
+
+        Assertions.assertTrue(parked);
+    }
+
+    @Test
+    public void knowMyVehicleIsNotParked() throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException, VehicleCouldNotBeUnParkedException, UnParkingFromEmptyLotException {
+        ParkingLot parkingLot = new ParkingLot(1);
+        Vehicle vehicle = vehicle();
+        parkingLot.park(vehicle);
+        parkingLot.unPark(vehicle);
+
+        boolean parked = parkingLot.isParked(vehicle);
+
+        Assertions.assertFalse(parked);
     }
 }
