@@ -59,7 +59,7 @@ public class AttendantWithMultipleParkingLotTest {
     }
 
     @Test
-    public void attendantHasParkedMyVehicleAndAllObserverGetsNotifiedWhenParkingIsFull() throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
+    public void attendantParkingVehiclesUntilAllLotsFullAndAllObserverGetsNotifiedForParkingIsFull() throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
         Owner owner1 = owner();
         Owner owner2 = owner();
         TrafficCop trafficCop1 = trafficcop();
@@ -91,5 +91,7 @@ public class AttendantWithMultipleParkingLotTest {
 
         assertFalse(owner1.isParkingFull());
         assertFalse(trafficCop1.isParkingFull());
+        assertFalse(owner2.isParkingFull());
+        assertFalse(trafficCop2.isParkingFull());
     }
 }
