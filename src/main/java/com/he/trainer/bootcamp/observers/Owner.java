@@ -15,7 +15,7 @@ public class Owner implements ParkingLotObserver {
 
     @Override
     public boolean isParkingFull() {
-        return false;
+        return parkingIsFull;
     }
 
     public static Owner owner() {
