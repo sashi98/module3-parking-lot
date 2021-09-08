@@ -3,6 +3,8 @@ package com.he.trainer.bootcamp;
 import com.he.trainer.bootcamp.exception.ParkingBeyondCapacityException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeParkedException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeUnParkedException;
+import com.he.trainer.bootcamp.observers.Owner;
+import com.he.trainer.bootcamp.observers.ParkingLotObserver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +12,16 @@ import java.util.List;
 public class ParkingLot {
     private final List<Vehicle> vehicles = new ArrayList<>();
     private final int capacity;
-    private final Owner owner;
+    private final ParkingLotObserver observer;
 
     public ParkingLot(int capacity) {
         this.capacity = capacity;
-        this.owner = null;
+        this.observer = null;
     }
 
-    public ParkingLot(int capacity, Owner owner) {
+    public ParkingLot(int capacity, ParkingLotObserver observer) {
         this.capacity = capacity;
-        this.owner = owner;
+        this.observer = observer;
     }
 
     public boolean park(Vehicle vehicle) throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException {
@@ -35,8 +37,8 @@ public class ParkingLot {
     }
 
     private void notifyParkingIsFull() {
-        if (owner != null && isParkingFull()) {
-            owner.parkingIsFullNotification();
+        if (observer != null && isParkingFull()) {
+            observer.parkingIsFullNotification();
         }
     }
 
@@ -59,8 +61,8 @@ public class ParkingLot {
     }
 
     private void notifyParkingIsAvailable() {
-        if (owner != null) {
-            owner.parkingIsAvailableNotification();
+        if (observer != null) {
+            observer.parkingIsAvailableNotification();
         }
     }
 

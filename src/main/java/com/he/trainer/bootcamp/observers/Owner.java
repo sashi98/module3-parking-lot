@@ -1,17 +1,21 @@
-package com.he.trainer.bootcamp;
+package com.he.trainer.bootcamp.observers;
 
-public class Owner {
+public class Owner implements ParkingLotObserver {
     private boolean parkingIsFull;
 
-    public void parkingIsFullNotification(){
+    @Override
+    public void parkingIsFullNotification() {
         parkingIsFull = true;
     }
+
+    @Override
     public void parkingIsAvailableNotification() {
         parkingIsFull = false;
     }
 
+    @Override
     public boolean isParkingFull() {
-        return parkingIsFull;
+        return false;
     }
 
     public static Owner owner() {
