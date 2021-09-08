@@ -1,27 +1,30 @@
 package com.he.trainer.bootcamp;
 
 import com.he.trainer.bootcamp.exception.ParkingBeyondCapacityException;
+import com.he.trainer.bootcamp.exception.UnParkingFromEmptyLotException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeParkedException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeUnParkedException;
-import com.he.trainer.bootcamp.observers.Owner;
 import com.he.trainer.bootcamp.observers.ParkingLotObserver;
+import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class ParkingLot {
     private final List<Vehicle> vehicles = new ArrayList<>();
     private final int capacity;
-    private final ParkingLotObserver observer;
+    private final List<ParkingLotObserver> observers;
 
     public ParkingLot(int capacity) {
         this.capacity = capacity;
-        this.observer = null;
+        this.observers = Collections.emptyList();
     }
 
-    public ParkingLot(int capacity, ParkingLotObserver observer) {
+    public ParkingLot(int capacity, ParkingLotObserver... observers) {
         this.capacity = capacity;
-        this.observer = observer;
+        this.observers = Arrays.asList(observers);
     }
 
     public boolean park(Vehicle vehicle) throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException {
@@ -37,8 +40,8 @@ public class ParkingLot {
     }
 
     private void notifyParkingIsFull() {
-        if (observer != null && isParkingFull()) {
-            observer.parkingIsFullNotification();
+        if (CollectionUtils.isNotEmpty(observers) && isParkingFull()) {
+            observers.forEach(observer -> observer.parkingIsFullNotification());
         }
     }
 
@@ -61,8 +64,8 @@ public class ParkingLot {
     }
 
     private void notifyParkingIsAvailable() {
-        if (observer != null) {
-            observer.parkingIsAvailableNotification();
+        if (CollectionUtils.isNotEmpty(observers)) {
+            observers.forEach(observer -> observer.parkingIsAvailableNotification());
         }
     }
 

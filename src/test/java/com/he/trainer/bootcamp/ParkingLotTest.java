@@ -1,6 +1,7 @@
 package com.he.trainer.bootcamp;
 
 import com.he.trainer.bootcamp.exception.ParkingBeyondCapacityException;
+import com.he.trainer.bootcamp.exception.UnParkingFromEmptyLotException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeParkedException;
 import com.he.trainer.bootcamp.exception.VehicleCouldNotBeUnParkedException;
 import org.junit.jupiter.api.Assertions;
