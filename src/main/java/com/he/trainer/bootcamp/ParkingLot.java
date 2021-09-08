@@ -1,9 +1,8 @@
 package com.he.trainer.bootcamp;
 
 import com.he.trainer.bootcamp.exception.ParkingBeyondCapacityException;
-import com.he.trainer.bootcamp.exception.UnParkingFromEmptyLotException;
-import com.he.trainer.bootcamp.exception.VehicleCouldNotBeParkedException;
-import com.he.trainer.bootcamp.exception.VehicleCouldNotBeUnParkedException;
+import com.he.trainer.bootcamp.exception.VehicleAlreadyParkedException;
+import com.he.trainer.bootcamp.exception.VehicleNotFoundException;
 import com.he.trainer.bootcamp.observers.ParkingLotObserver;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -17,50 +16,45 @@ public class ParkingLot {
     private final int capacity;
     private final List<ParkingLotObserver> observers;
 
-    public ParkingLot(int capacity) {
+    private ParkingLot(int capacity) {
         this.capacity = capacity;
         this.observers = Collections.emptyList();
     }
 
-    public ParkingLot(int capacity, ParkingLotObserver... observers) {
+    private ParkingLot(int capacity, ParkingLotObserver... observers) {
         this.capacity = capacity;
         this.observers = Arrays.asList(observers);
     }
 
-    public boolean park(Vehicle vehicle) throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException {
-        if (isParkingFull()) {
+    public boolean park(Vehicle vehicle) throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
+        if (isFull()) {
             throw new ParkingBeyondCapacityException("No space to park vehicle.");
         }
         if (isParked(vehicle)) {
-            throw new VehicleCouldNotBeParkedException("Vehicle is already parked.");
+            throw new VehicleAlreadyParkedException("Vehicle is already parked.");
         }
         vehicles.add(vehicle);
         notifyParkingIsFull();
         return true;
     }
 
+    public boolean unPark(Vehicle vehicle) throws VehicleNotFoundException {
+        if (!isParked(vehicle))
+            throw new VehicleNotFoundException("No Vehicle found to un-park.");
+
+        vehicles.remove(vehicle);
+        notifyParkingIsAvailable();
+        return true;
+    }
+
     private void notifyParkingIsFull() {
-        if (CollectionUtils.isNotEmpty(observers) && isParkingFull()) {
+        if (CollectionUtils.isNotEmpty(observers) && isFull()) {
             observers.forEach(observer -> observer.parkingIsFullNotification());
         }
     }
 
-    private boolean isParkingFull() {
-        return vehicles.size() == capacity;
-    }
-
     public boolean isParked(Vehicle vehicle) {
         return vehicles.contains(vehicle);
-    }
-
-    public boolean unPark(Vehicle vehicle) throws VehicleCouldNotBeUnParkedException, UnParkingFromEmptyLotException {
-        if (!isParked(vehicle) && isParkingAvailable())
-            throw new VehicleCouldNotBeUnParkedException("No Vehicle found to un-park.");
-        if (isParkingLotEmpty())
-            throw new UnParkingFromEmptyLotException("Vehicle cannot be up-parked from empty lot.");
-        vehicles.remove(vehicle);
-        notifyParkingIsAvailable();
-        return true;
     }
 
     private void notifyParkingIsAvailable() {
@@ -69,13 +63,20 @@ public class ParkingLot {
         }
     }
 
-    private boolean isParkingAvailable() {
-        return vehicles.size() > 0 && vehicles.size() <= capacity;
-    }
-
-    private boolean isParkingLotEmpty() {
-        return vehicles.size() == 0;
+    public boolean isAvailable() {
+        return vehicles.size() < capacity;
     }
 
 
+    public boolean isFull() {
+        return vehicles.size() == capacity;
+    }
+
+    public static ParkingLot parkingLot(int capacity) {
+        return new ParkingLot(capacity);
+    }
+
+    public static ParkingLot parkingLot(int capacity, ParkingLotObserver... observers) {
+        return new ParkingLot(capacity, observers);
+    }
 }
