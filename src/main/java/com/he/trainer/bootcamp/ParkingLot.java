@@ -23,10 +23,10 @@ public class ParkingLot {
     }
 
     public boolean park(Vehicle vehicle) throws VehicleCouldNotBeParkedException, ParkingBeyondCapacityException {
-        if (isParkingFull()){
+        if (isParkingFull()) {
             throw new ParkingBeyondCapacityException("No space to park vehicle.");
         }
-        if (isParked(vehicle)){
+        if (isParked(vehicle)) {
             throw new VehicleCouldNotBeParkedException("Vehicle is already parked.");
         }
         vehicles.add(vehicle);
@@ -49,8 +49,10 @@ public class ParkingLot {
     }
 
     public boolean unPark(Vehicle vehicle) throws VehicleCouldNotBeUnParkedException, UnParkingFromEmptyLotException {
-        if (!isParked(vehicle) && isParkingAvailable()) throw new VehicleCouldNotBeUnParkedException("No Vehicle found to un-park.");
-        if (isParkingLotEmpty()) throw new UnParkingFromEmptyLotException("Vehicle cannot be up-parked from empty lot.");
+        if (!isParked(vehicle) && isParkingAvailable())
+            throw new VehicleCouldNotBeUnParkedException("No Vehicle found to un-park.");
+        if (isParkingLotEmpty())
+            throw new UnParkingFromEmptyLotException("Vehicle cannot be up-parked from empty lot.");
         vehicles.remove(vehicle);
         notifyParkingIsAvailable();
         return true;
@@ -63,11 +65,11 @@ public class ParkingLot {
     }
 
     private boolean isParkingAvailable() {
-        return vehicles.size() <= capacity;
+        return vehicles.size() > 0 && vehicles.size() <= capacity;
     }
 
     private boolean isParkingLotEmpty() {
-        return vehicles.size()==0;
+        return vehicles.size() == 0;
     }
 
 
