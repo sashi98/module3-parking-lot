@@ -16,6 +16,13 @@ public enum ParkingLotSelectionPolicy {
             availableParkingLots.sort(Comparator.comparing(ParkingLot::vehicleCount));
             return availableParkingLots.get(0);
         }
+    },
+    MOST_CAPACITY_LOT(){
+        @Override
+        public ParkingLot selectLot(List<ParkingLot> availableParkingLots) {
+            availableParkingLots.sort(Comparator.comparing(ParkingLot::capacity).reversed());
+            return availableParkingLots.get(0);
+        }
     };
 
     public abstract ParkingLot selectLot(List<ParkingLot> availableParkingLots);

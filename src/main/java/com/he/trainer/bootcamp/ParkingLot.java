@@ -75,7 +75,21 @@ public class ParkingLot {
         return new ParkingLot(capacity, observers);
     }
 
+    public int capacity() {
+        return capacity;
+    }
+
     public int vehicleCount() {
         return vehicles.size();
+    }
+
+    @Override
+    public String toString() {
+        return "ParkingLot{" +
+                "vehicles=" + vehicles +
+                ", capacity=" + capacity +
+                ", vehicleCount="+vehicleCount()+
+                ", observers=" + observers +
+                '}';
     }
 }
