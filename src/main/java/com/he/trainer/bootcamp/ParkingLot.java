@@ -8,17 +8,22 @@ import org.apache.commons.collections4.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class ParkingLot {
     private final List<Vehicle> vehicles = new ArrayList<>();
     private final int capacity;
     private final List<ParkingLotObserver> observers;
+    private int cost;
 
     private ParkingLot(int capacity, ParkingLotObserver... observers) {
         this.capacity = capacity;
         this.observers = Arrays.asList(observers);
+    }
+
+    private ParkingLot(int capacity, int cost, ParkingLotObserver[] observers) {
+        this(capacity, observers);
+        this.cost = cost;
     }
 
     public boolean park(Vehicle vehicle) throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
@@ -54,17 +59,24 @@ public class ParkingLot {
 
     private void notifyParkingIsAvailable() {
         if (CollectionUtils.isNotEmpty(observers)) {
-            observers.forEach(observer -> observer.parkingIsAvailableNotification());
+            observers.forEach(ParkingLotObserver::parkingIsAvailableNotification);
         }
     }
 
-    public boolean isAvailable() {
-        return vehicles.size() < capacity;
-    }
-
-
     public boolean isFull() {
         return vehicles.size() == capacity;
+    }
+
+    public int capacity() {
+        return capacity;
+    }
+
+    public int cost() {
+       return cost;
+    }
+
+    public int vehicleCount() {
+        return vehicles.size();
     }
 
     public static ParkingLot parkingLot(int capacity) {
@@ -75,12 +87,8 @@ public class ParkingLot {
         return new ParkingLot(capacity, observers);
     }
 
-    public int capacity() {
-        return capacity;
-    }
-
-    public int vehicleCount() {
-        return vehicles.size();
+    public static ParkingLot parkingLot(int capacity, int cost, ParkingLotObserver... observers) {
+        return new ParkingLot(capacity, cost, observers);
     }
 
     @Override
@@ -88,7 +96,8 @@ public class ParkingLot {
         return "ParkingLot{" +
                 "vehicles=" + vehicles +
                 ", capacity=" + capacity +
-                ", vehicleCount="+vehicleCount()+
+                ", vehicleCount=" + vehicleCount() +
+                ", cost=" + cost +
                 ", observers=" + observers +
                 '}';
     }

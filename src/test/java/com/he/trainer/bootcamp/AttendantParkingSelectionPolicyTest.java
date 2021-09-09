@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static com.he.trainer.bootcamp.Attendant.attendant;
 import static com.he.trainer.bootcamp.ParkingLot.parkingLot;
-import static com.he.trainer.bootcamp.ParkingLotSelectionPolicy.LEAST_VEHICLE_LOT;
-import static com.he.trainer.bootcamp.ParkingLotSelectionPolicy.MOST_CAPACITY_LOT;
+import static com.he.trainer.bootcamp.ParkingLotSelectionPolicy.*;
 import static com.he.trainer.bootcamp.Vehicle.vehicle;
 
 public class AttendantParkingSelectionPolicyTest {
@@ -63,11 +62,32 @@ public class AttendantParkingSelectionPolicyTest {
         Assertions.assertEquals(5, parkingLot3.vehicleCount());
     }
 
-    private ParkingLot getParkingLotWithVehicles(int count, int capacity) throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
-        ParkingLot parkingLot = parkingLot(capacity);
-        for (int i = 0; i < count; i++) {
+    @Test
+    public void attendantParkingVehiclesInAvailableLotHavingMostCheapestCost() throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
+        ParkingLot parkingLot1 = getParkingLotWithVehicles(0, 2, 1);
+        ParkingLot parkingLot2 = getParkingLotWithVehicles(1, 3, 2);
+        ParkingLot parkingLot3 = getParkingLotWithVehicles(2, 6, 3);
+
+        Attendant attendant = attendant(parkingLot1, parkingLot2, parkingLot3);
+        attendant.overrideLotSelectionPolicy(MOST_CHEAPEST_LOT);
+        attendant.park(vehicle());
+        attendant.park(vehicle());
+        attendant.park(vehicle());
+
+        Assertions.assertEquals(2, parkingLot1.vehicleCount());
+        Assertions.assertEquals(2, parkingLot2.vehicleCount());
+        Assertions.assertEquals(2, parkingLot3.vehicleCount());
+    }
+
+    private ParkingLot getParkingLotWithVehicles(int initialCount, int capacity, int cost) throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
+        ParkingLot parkingLot = parkingLot(capacity, cost);
+        for (int i = 0; i < initialCount; i++) {
             parkingLot.park(vehicle());
         }
         return parkingLot;
+    }
+
+    private ParkingLot getParkingLotWithVehicles(int initialCount, int capacity) throws VehicleAlreadyParkedException, ParkingBeyondCapacityException {
+        return getParkingLotWithVehicles(initialCount, capacity, 0);
     }
 }
