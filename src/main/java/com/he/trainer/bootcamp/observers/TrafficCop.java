@@ -13,7 +13,6 @@ public class TrafficCop implements ParkingLotObserver{
         parkingIsFull = false;
     }
 
-    @Override
     public boolean isParkingFull() {
         return parkingIsFull;
     }

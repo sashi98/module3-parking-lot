@@ -13,7 +13,9 @@ public class Owner implements ParkingLotObserver {
         parkingIsFull = false;
     }
 
-    @Override
+    /*
+    Should this method be declared in interface or not??
+     */
     public boolean isParkingFull() {
         return parkingIsFull;
     }

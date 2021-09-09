@@ -16,11 +16,6 @@ public class ParkingLot {
     private final int capacity;
     private final List<ParkingLotObserver> observers;
 
-    private ParkingLot(int capacity) {
-        this.capacity = capacity;
-        this.observers = Collections.emptyList();
-    }
-
     private ParkingLot(int capacity, ParkingLotObserver... observers) {
         this.capacity = capacity;
         this.observers = Arrays.asList(observers);
@@ -48,8 +43,8 @@ public class ParkingLot {
     }
 
     private void notifyParkingIsFull() {
-        if (CollectionUtils.isNotEmpty(observers) && isFull()) {
-            observers.forEach(observer -> observer.parkingIsFullNotification());
+        if (isFull()) {
+            observers.forEach(ParkingLotObserver::parkingIsFullNotification);
         }
     }
 
@@ -78,5 +73,9 @@ public class ParkingLot {
 
     public static ParkingLot parkingLot(int capacity, ParkingLotObserver... observers) {
         return new ParkingLot(capacity, observers);
+    }
+
+    public int vehicleCount() {
+        return vehicles.size();
     }
 }
